@@ -14,12 +14,15 @@ exports.signup = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: hashedPassword });
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const expiresIn = process.env.EXPIRES_IN || '1d';
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn });
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: typeof expiresIn === 'string' && expiresIn.endsWith('d')
+        ? parseInt(expiresIn) * 24 * 60 * 60 * 1000
+        : 24 * 60 * 60 * 1000 // fallback to 1 day
     });
     res.status(201).json({ user: user.email });
   } catch (err) {
@@ -41,12 +44,15 @@ exports.login = async (req, res, next) => {
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const expiresIn = process.env.EXPIRES_IN || '1d';
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn });
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: typeof expiresIn === 'string' && expiresIn.endsWith('d')
+        ? parseInt(expiresIn) * 24 * 60 * 60 * 1000
+        : 24 * 60 * 60 * 1000 // fallback to 1 day
     });
     res.status(200).json({ user: user.email });
   } catch (err) {

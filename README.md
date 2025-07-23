@@ -4,7 +4,7 @@ A full-stack task management app built with MongoDB, Express.js, React.js, and N
 
 ## Live Demo
 - **Frontend (Vercel):** [https://elliot-sys-assignment-qast-a5qe9zznt-abhay-panchals-projects.vercel.app/](https://elliot-sys-assignment-qast-a5qe9zznt-abhay-panchals-projects.vercel.app/)
-- **Backend API (Render):** [https://elliotsysassignment.onrender.com/api](https://elliotsysassignment.onrender.com/api)
+- **Backend API (Render):** [https://elliotsysassignment.onrender.com/api/health](https://elliotsysassignment.onrender.com/api/health)
 
 ## Features
 - User authentication (signup, login, logout) with JWT

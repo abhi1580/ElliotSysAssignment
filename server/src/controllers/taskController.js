@@ -14,6 +14,8 @@ exports.createTask = async (req, res, next) => {
       priority,
       user: req.user.userId,
     });
+    const io = req.app.get('io');
+    io.emit('taskCreated', task);
     res.status(201).json(task);
   } catch (err) {
     next(err);
@@ -65,6 +67,8 @@ exports.updateTask = async (req, res, next) => {
       { new: true, runValidators: true }
     );
     if (!task) return res.status(404).json({ message: 'Task not found' });
+    const io = req.app.get('io');
+    io.emit('taskUpdated', task);
     res.json(task);
   } catch (err) {
     next(err);
@@ -76,6 +80,8 @@ exports.deleteTask = async (req, res, next) => {
   try {
     const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
     if (!task) return res.status(404).json({ message: 'Task not found' });
+    const io = req.app.get('io');
+    io.emit('taskDeleted', req.params.id);
     res.json({ message: 'Task deleted' });
   } catch (err) {
     next(err);
@@ -89,6 +95,8 @@ exports.toggleTaskStatus = async (req, res, next) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
     task.status = task.status === 'complete' ? 'incomplete' : 'complete';
     await task.save();
+    const io = req.app.get('io');
+    io.emit('taskToggled', task);
     res.json(task);
   } catch (err) {
     next(err);

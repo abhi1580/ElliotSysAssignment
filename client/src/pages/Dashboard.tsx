@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import AddIcon from '@mui/icons-material/Add';
+import socket from '../services/socket';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -31,6 +32,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch<any>(fetchTasks({}));
+    socket.on('taskCreated', () => dispatch<any>(fetchTasks({})));
+    socket.on('taskUpdated', () => dispatch<any>(fetchTasks({})));
+    socket.on('taskDeleted', () => dispatch<any>(fetchTasks({})));
+    socket.on('taskToggled', () => dispatch<any>(fetchTasks({})));
+    return () => {
+      socket.off('taskCreated');
+      socket.off('taskUpdated');
+      socket.off('taskDeleted');
+      socket.off('taskToggled');
+    };
   }, [dispatch]);
 
   // Reset page when filters/search/sort change

@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from './store';
+import { CssBaseline, Button, Box } from '@mui/material';
+import { logoutUser, checkAuth } from './features/auth/authSlice';
+import { useEffect } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function Dashboard() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    await dispatch<any>(logoutUser());
+    navigate('/login');
+  };
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
+      <h2>Dashboard</h2>
+      <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
+    </Box>
+  );
 }
 
-export default App
+export default function App() {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    dispatch<any>(checkAuth());
+  }, [dispatch]);
+  return (
+    <Router>
+      <CssBaseline />
+      <Routes>
+        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
+        <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
+        <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+      </Routes>
+    </Router>
+  );
+}

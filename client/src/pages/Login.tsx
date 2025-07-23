@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, token } = useSelector((state: RootState) => state.auth);
+  const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,7 +18,7 @@ export default function Login() {
     if (res.meta.requestStatus === 'fulfilled') navigate('/');
   };
 
-  if (token) navigate('/');
+  if (isAuthenticated) navigate('/');
 
   return (
     <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

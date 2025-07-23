@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../../services/axios';
 
 export interface Task {
   _id: string;
@@ -24,15 +24,11 @@ const initialState: TasksState = {
   error: null,
 };
 
-const getAuthHeader = () => ({
-  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-});
-
 export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
   async (params: any, { rejectWithValue }) => {
     try {
-      const res = await axios.get('/api/tasks', { ...getAuthHeader(), params });
+      const res = await api.get('/tasks', { params });
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Fetch tasks failed');
@@ -44,7 +40,7 @@ export const createTask = createAsyncThunk(
   'tasks/createTask',
   async (task: Partial<Task>, { rejectWithValue }) => {
     try {
-      const res = await axios.post('/api/tasks', task, getAuthHeader());
+      const res = await api.post('/tasks', task);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Create task failed');
@@ -56,7 +52,7 @@ export const updateTask = createAsyncThunk(
   'tasks/updateTask',
   async ({ id, updates }: { id: string; updates: Partial<Task> }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`/api/tasks/${id}`, updates, getAuthHeader());
+      const res = await api.put(`/tasks/${id}`, updates);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Update task failed');
@@ -68,7 +64,7 @@ export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
   async (id: string, { rejectWithValue }) => {
     try {
-      await axios.delete(`/api/tasks/${id}`, getAuthHeader());
+      await api.delete(`/tasks/${id}`);
       return id;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Delete task failed');
@@ -80,7 +76,7 @@ export const toggleTaskStatus = createAsyncThunk(
   'tasks/toggleTaskStatus',
   async (id: string, { rejectWithValue }) => {
     try {
-      const res = await axios.patch(`/api/tasks/${id}/toggle`, {}, getAuthHeader());
+      const res = await api.patch(`/tasks/${id}/toggle`);
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || 'Toggle status failed');

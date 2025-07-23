@@ -2,6 +2,10 @@
 
 A full-stack task management app built with MongoDB, Express.js, React.js, and Node.js.
 
+## Live Demo
+- **Frontend (Vercel):** [https://elliot-sys-assignment-qast-a5qe9zznt-abhay-panchals-projects.vercel.app/](https://elliot-sys-assignment-qast-a5qe9zznt-abhay-panchals-projects.vercel.app/)
+- **Backend API (Render):** [https://elliotsysassignment.onrender.com/api](https://elliotsysassignment.onrender.com/api)
+
 ## Features
 - User authentication (signup, login, logout) with JWT
 - Dashboard to display, create, edit, delete, and mark tasks as complete/incomplete
@@ -44,7 +48,7 @@ The frontend runs on `http://localhost:5173` by default.
 ## API Documentation
 Interactive API docs are available at:
 ```
-http://localhost:5000/api/docs
+https://elliotsysassignment.onrender.com/api/docs
 ```
 - All endpoints, request/response schemas, and authentication details are documented.
 
@@ -54,3 +58,15 @@ ElliotSysAssignment/
   client/   # React frontend
   server/   # Express backend
 ```
+
+## Deployment
+- Frontend is deployed to Vercel, backend to Render.
+- Update environment variables and CORS settings as needed.
+
+## Additional Notes
+- Make regular commits with meaningful messages.
+- Follow best practices for security and code quality.
+- For any questions, contact: swathi.patil@elliotsystems.com
+
+---
+**Good luck!**

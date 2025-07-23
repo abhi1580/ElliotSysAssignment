@@ -19,7 +19,7 @@ exports.signup = async (req, res, next) => {
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: typeof expiresIn === 'string' && expiresIn.endsWith('d')
         ? parseInt(expiresIn) * 24 * 60 * 60 * 1000
         : 24 * 60 * 60 * 1000 // fallback to 1 day
@@ -49,7 +49,7 @@ exports.login = async (req, res, next) => {
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: typeof expiresIn === 'string' && expiresIn.endsWith('d')
         ? parseInt(expiresIn) * 24 * 60 * 60 * 1000
         : 24 * 60 * 60 * 1000 // fallback to 1 day
@@ -64,7 +64,7 @@ exports.logout = (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     path: '/'
   });
   res.status(200).json({ message: 'Logged out' });
